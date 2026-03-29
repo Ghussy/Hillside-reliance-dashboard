@@ -7,13 +7,12 @@ import {
 
 export const searchParams = {
   page: parseAsInteger.withDefault(1),
-  perPage: parseAsInteger.withDefault(10),
+  perPage: parseAsInteger.withDefault(100),
   name: parseAsString,
   gender: parseAsString,
-  category: parseAsString
-  // advanced filter
-  // filters: getFiltersStateParser().withDefault([]),
-  // joinOperator: parseAsStringEnum(['and', 'or']).withDefault('and')
+  category: parseAsString,
+  role: parseAsString,
+  status: parseAsString
 };
 
 export const searchParamsCache = createSearchParamsCache(searchParams);

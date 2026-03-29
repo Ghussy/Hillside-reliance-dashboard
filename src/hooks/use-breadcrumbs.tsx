@@ -19,16 +19,30 @@ const routeMapping: Record<string, BreadcrumbItem[]> = {
     { title: 'Dashboard', link: '/dashboard' },
     { title: 'Product', link: '/dashboard/product' }
   ]
-  // Add more custom mappings as needed
 };
+
+const dynamicRoutes: { pattern: RegExp; crumbs: BreadcrumbItem[] }[] = [
+  {
+    pattern: /^\/dashboard\/members\/[^/]+$/,
+    crumbs: [
+      { title: 'Dashboard', link: '/dashboard' },
+      { title: 'Members', link: '/dashboard/members' },
+      { title: 'Member Detail', link: '#' }
+    ]
+  }
+];
 
 export function useBreadcrumbs() {
   const pathname = usePathname();
 
   const breadcrumbs = useMemo(() => {
-    // Check if we have a custom mapping for this exact path
     if (routeMapping[pathname]) {
       return routeMapping[pathname];
+    }
+
+    const dynamic = dynamicRoutes.find((r) => r.pattern.test(pathname));
+    if (dynamic) {
+      return dynamic.crumbs;
     }
 
     // If no exact match, fall back to generating breadcrumbs from the path

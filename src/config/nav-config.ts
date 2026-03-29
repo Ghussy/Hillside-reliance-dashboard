@@ -60,10 +60,10 @@ export const navItems: NavItem[] = [
     // access: { requireOrg: true, permission: 'org:teams:view' }
   },
   {
-    title: 'Product',
-    url: '/dashboard/product',
+    title: 'Members',
+    url: '/dashboard/members',
     icon: 'product',
-    shortcut: ['p', 'p'],
+    shortcut: ['m', 'b'],
     isActive: false,
     items: []
   },
@@ -74,20 +74,6 @@ export const navItems: NavItem[] = [
     shortcut: ['k', 'k'],
     isActive: false,
     items: []
-  },
-  {
-    title: 'Pro',
-    url: '#', // Placeholder as there is no direct link for the parent
-    icon: 'pro',
-    isActive: true,
-    items: [
-      {
-        title: 'Exclusive',
-        url: '/dashboard/exclusive',
-        icon: 'exclusive',
-        shortcut: ['m', 'm']
-      }
-    ]
   },
   {
     title: 'Account',

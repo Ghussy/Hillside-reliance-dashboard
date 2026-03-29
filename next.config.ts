@@ -3,6 +3,11 @@ import { withSentryConfig } from '@sentry/nextjs';
 
 // Define the base Next.js configuration
 const baseConfig: NextConfig = {
+  experimental: {
+    staleTimes: {
+      dynamic: 180
+    }
+  },
   images: {
     remotePatterns: [
       {
@@ -12,12 +17,7 @@ const baseConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'img.clerk.com',
-        port: ''
-      },
-      {
-        protocol: 'https',
-        hostname: 'clerk.com',
+        hostname: '*.supabase.co',
         port: ''
       }
     ]

@@ -9,8 +9,16 @@
     "baseColor": "zinc",
     "cssVariables": true
   },
+  "iconLibrary": "radix",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils"
+  },
+  "registries": {
+    "@unlumen-ui": "https://ui.unlumen.com/r/{name}.json",
+    "@aceternity": "https://ui.aceternity.com/registry/{name}.json",
+    "@smoothui": "https://smoothui.dev/r/{name}.json",
+    "@supabase": "https://supabase.com/ui/r/{name}.json",
+    "@animate-ui": "https://animate-ui.com/r/{name}.json"
   }
 }

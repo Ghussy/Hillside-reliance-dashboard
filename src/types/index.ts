@@ -1,4 +1,4 @@
-import { Icons } from '@/components/icons';
+import type { Icons } from '@/components/icons';
 
 export interface PermissionCheck {
   permission?: string;
@@ -42,3 +42,27 @@ export interface FooterItem {
 export type MainNavItem = NavItemWithOptionalChildren;
 
 export type SidebarNavItem = NavItemWithChildren;
+
+export interface Calling {
+  name: string;
+  organization: string;
+}
+
+export interface Member {
+  id: string;
+  auth_id: string | null;
+  name: string;
+  email?: string | null;
+  phone?: string | null;
+  role: string;
+  photo_url?: string | null;
+  household_name?: string | null;
+  address?: string | null;
+  status: string;
+  callings: Calling[];
+  synced_at?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+  email_manual?: boolean;
+  phone_manual?: boolean;
+}

@@ -49,3 +49,18 @@
   /* Apply the reveal animation */
   animation: reveal 0.4s ease-in-out forwards;
 }
+
+/* Login painting bloom — pulses the warm-highlight glow layer */
+@keyframes painting-bloom {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+  50% {
+    opacity: 0.58;
+  }
+}
+
+.animate-painting-bloom {
+  animation: painting-bloom 6s ease-in-out infinite;
+}
