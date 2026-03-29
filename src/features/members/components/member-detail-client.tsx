@@ -206,6 +206,7 @@ export function MemberDetailClient({
 
       <div className='flex flex-col gap-5'>
         {/* Email */}
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative hover animation */}
         <div
           className='-mx-1 flex items-center gap-3 rounded-md px-1 py-0.5'
           onMouseEnter={() => emailIconRef.current?.startAnimation()}
@@ -264,6 +265,7 @@ export function MemberDetailClient({
         </div>
 
         {/* Address */}
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative hover animation */}
         <div
           className='-mx-1 flex items-center gap-3 rounded-md px-1 py-0.5'
           onMouseEnter={() => mapPinIconRef.current?.startAnimation()}
@@ -298,6 +300,7 @@ export function MemberDetailClient({
         </div>
 
         {/* Role */}
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative hover animation */}
         <div
           className='-mx-1 flex items-center gap-3 rounded-md px-1 py-0.5'
           onMouseEnter={() => shieldIconRef.current?.startAnimation()}
