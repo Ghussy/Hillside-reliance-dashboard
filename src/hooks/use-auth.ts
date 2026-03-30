@@ -13,14 +13,24 @@ import { useCallback, useEffect, useState } from 'react';
 const MEMBER_COLUMNS =
   'id, auth_id, name, email, phone, role, photo_url' as const;
 
+async function signStoragePath(path: string): Promise<string | null> {
+  const supabase = createClient();
+  const { data } = await supabase.storage
+    .from(MEMBER_PHOTOS_BUCKET)
+    .createSignedUrl(path, SIGNED_URL_EXPIRY);
+  return data?.signedUrl ?? null;
+}
+
 export function useUser() {
   const [user, setUser] = useState<User | null>(null);
   const [member, setMember] = useState<Member | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const fetchMember = useCallback(async (authUser: User | null) => {
     if (!authUser) {
       setMember(null);
+      setAvatarUrl(null);
       return;
     }
 
@@ -31,16 +41,19 @@ export function useUser() {
       .eq('auth_id', authUser.id)
       .single();
 
-    if (data) {
-      const pathToSign = data.photo_url || authUser.user_metadata?.avatar_url;
-      if (isStoragePath(pathToSign)) {
-        const { data: signed } = await supabase.storage
-          .from(MEMBER_PHOTOS_BUCKET)
-          .createSignedUrl(pathToSign, SIGNED_URL_EXPIRY);
-        if (signed?.signedUrl) {
-          data.photo_url = signed.signedUrl;
-        }
-      }
+    const bestPhotoPath =
+      (data?.photo_url as string | undefined) ||
+      authUser.user_metadata?.avatar_url ||
+      null;
+
+    if (data && isStoragePath(bestPhotoPath)) {
+      const signed = await signStoragePath(bestPhotoPath);
+      if (signed) data.photo_url = signed;
+      setAvatarUrl(signed ?? bestPhotoPath);
+    } else if (isStoragePath(bestPhotoPath)) {
+      setAvatarUrl((await signStoragePath(bestPhotoPath)) ?? bestPhotoPath);
+    } else {
+      setAvatarUrl(bestPhotoPath);
     }
 
     setMember((data as Member) ?? null);
@@ -61,14 +74,13 @@ export function useUser() {
     return () => subscription.unsubscribe();
   }, [fetchMember]);
 
-  return { user, member, isLoaded };
+  return { user, member, avatarUrl, isLoaded };
 }
 
 export function useSignOut() {
-  const signOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    window.location.href = '/auth/sign-in';
+  /** Full navigation: server route clears SSR cookies reliably (see auth/sign-out). */
+  const signOut = (): void => {
+    window.location.assign('/auth/sign-out');
   };
 
   return { signOut };

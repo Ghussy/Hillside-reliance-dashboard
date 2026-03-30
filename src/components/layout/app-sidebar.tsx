@@ -49,7 +49,7 @@ import { OrgSwitcher } from '../org-switcher';
 export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
-  const { user, member } = useUser();
+  const { user, member, avatarUrl } = useUser();
   const { signOut } = useSignOut();
   const router = useRouter();
   const filteredItems = useFilteredNavItems(navItems);
@@ -136,6 +136,7 @@ export default function AppSidebar() {
                     <UserAvatarProfile
                       className='h-8 w-8 rounded-lg'
                       showInfo
+                      avatarUrl={avatarUrl}
                       member={member}
                       user={user}
                     />
@@ -155,6 +156,7 @@ export default function AppSidebar() {
                       <UserAvatarProfile
                         className='h-8 w-8 rounded-lg'
                         showInfo
+                        avatarUrl={avatarUrl}
                         member={member}
                         user={user}
                       />
@@ -176,7 +178,7 @@ export default function AppSidebar() {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut}>
+                <DropdownMenuItem onSelect={() => signOut()}>
                   <IconLogout className='mr-2 h-4 w-4' />
                   Log out
                 </DropdownMenuItem>

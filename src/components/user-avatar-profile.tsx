@@ -4,6 +4,7 @@ import type { Member } from '@/types';
 interface UserAvatarProfileProps {
   className?: string;
   showInfo?: boolean;
+  avatarUrl?: string | null;
   member?: Member | null;
   user?: {
     email?: string;
@@ -11,6 +12,7 @@ interface UserAvatarProfileProps {
     user_metadata?: {
       avatar_url?: string;
       full_name?: string;
+      name?: string;
     };
   } | null;
 }
@@ -18,12 +20,14 @@ interface UserAvatarProfileProps {
 export function UserAvatarProfile({
   className,
   showInfo = false,
+  avatarUrl,
   member,
   user
 }: UserAvatarProfileProps) {
-  const name = member?.name || user?.user_metadata?.full_name || '';
-  const photo = member?.photo_url || user?.user_metadata?.avatar_url || '';
-  const subtitle = member?.role || user?.email || user?.phone || '';
+  const meta = user?.user_metadata;
+  const name = member?.name || meta?.name || meta?.full_name || '';
+  const photo = avatarUrl || member?.photo_url || '';
+  const subtitle = member?.role || user?.email || '';
   const initials =
     name
       ?.split(' ')
