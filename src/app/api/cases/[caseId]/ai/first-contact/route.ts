@@ -1,0 +1,49 @@
+import { draftFirstContact } from '@/features/cases/ai/case-ai';
+import { CASE_DETAIL_SELECT, coerceCaseRecord } from '@/features/cases/data';
+import { getCommitteeMemberOrResponse } from '@/lib/case-api-auth';
+import { NextResponse } from 'next/server';
+
+type PageProps = {
+  params: Promise<{ caseId: string }>;
+};
+
+export async function POST(_request: Request, props: PageProps) {
+  const auth = await getCommitteeMemberOrResponse();
+
+  if (auth.response) {
+    return auth.response;
+  }
+
+  const { caseId } = await props.params;
+  const { data } = await auth.supabase
+    .from('cases')
+    .select(CASE_DETAIL_SELECT)
+    .eq('id', caseId)
+    .single();
+
+  if (!data) {
+    return NextResponse.json({ error: 'Case not found.' }, { status: 404 });
+  }
+
+  try {
+    const draft = await draftFirstContact(coerceCaseRecord(data));
+    const { error } = await auth.supabase
+      .from('cases')
+      .update({ ai_first_contact_draft: draft.message })
+      .eq('id', caseId);
+
+    if (error) {
+      return NextResponse.json(
+        { error: 'Unable to save AI draft.' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(draft);
+  } catch {
+    return NextResponse.json(
+      { error: 'Unable to generate first-contact draft.' },
+      { status: 500 }
+    );
+  }
+}

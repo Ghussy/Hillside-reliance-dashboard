@@ -68,6 +68,15 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
+    title: 'Cases',
+    url: '/dashboard/cases',
+    icon: 'post',
+    shortcut: ['c', 's'],
+    isActive: false,
+    items: [],
+    access: { role: 'committee' }
+  },
+  {
     title: 'Kanban',
     url: '/dashboard/kanban',
     icon: 'kanban',

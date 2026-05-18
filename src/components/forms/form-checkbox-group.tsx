@@ -1,6 +1,6 @@
 'use client';
 
-import { FieldPath, FieldValues } from 'react-hook-form';
+import type { FieldPath, FieldValues } from 'react-hook-form';
 import {
   FormControl,
   FormDescription,
@@ -11,7 +11,11 @@ import {
 } from '@/components/ui/form';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { BaseFormFieldProps, CheckboxGroupOption } from '@/types/base-form';
+import type {
+  BaseFormFieldProps,
+  CheckboxGroupOption
+} from '@/types/base-form';
+import { cn } from '@/lib/utils';
 
 interface FormCheckboxGroupProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -57,9 +61,17 @@ function FormCheckboxGroup<
             </FormLabel>
           )}
           {description && <FormDescription>{description}</FormDescription>}
-          <div className={`grid gap-4 ${gridCols[columns]}`}>
+          <div className={`grid gap-3 sm:gap-4 ${gridCols[columns]}`}>
             {options.map((option) => (
-              <div key={option.value} className='flex items-center space-x-2'>
+              <label
+                key={option.value}
+                htmlFor={`${name}-${option.value}`}
+                className={cn(
+                  'bg-background hover:bg-accent/50 flex min-h-14 cursor-pointer items-center gap-3 rounded-xl border p-4 text-base leading-snug font-medium transition-colors sm:min-h-12 sm:p-3 sm:text-sm',
+                  (disabled || option.disabled) &&
+                    'hover:bg-background cursor-not-allowed opacity-50'
+                )}
+              >
                 <FormControl>
                   <Checkbox
                     id={`${name}-${option.value}`}
@@ -79,13 +91,8 @@ function FormCheckboxGroup<
                     disabled={disabled || option.disabled}
                   />
                 </FormControl>
-                <label
-                  htmlFor={`${name}-${option.value}`}
-                  className='text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                >
-                  {option.label}
-                </label>
-              </div>
+                <span>{option.label}</span>
+              </label>
             ))}
           </div>
           {showBadges && field.value && field.value.length > 0 && (

@@ -1,6 +1,6 @@
 'use client';
 
-import { FieldPath, FieldValues } from 'react-hook-form';
+import type { FieldPath, FieldValues } from 'react-hook-form';
 import {
   FormControl,
   FormDescription,
@@ -10,8 +10,8 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { BaseFormFieldProps, RadioGroupOption } from '@/types/base-form';
+import type { BaseFormFieldProps, RadioGroupOption } from '@/types/base-form';
+import { cn } from '@/lib/utils';
 
 interface FormRadioGroupProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -55,24 +55,27 @@ function FormRadioGroup<
               disabled={disabled}
               className={
                 orientation === 'horizontal'
-                  ? 'flex flex-row space-x-6'
-                  : 'space-y-2'
+                  ? 'grid gap-3 sm:grid-cols-2'
+                  : 'grid gap-3'
               }
             >
               {options.map((option) => (
-                <div key={option.value} className='flex items-center space-x-2'>
+                <label
+                  key={option.value}
+                  htmlFor={`${name}-${option.value}`}
+                  className={cn(
+                    'bg-background hover:bg-accent/50 flex min-h-14 cursor-pointer items-center gap-3 rounded-xl border p-4 text-base leading-snug font-medium transition-colors sm:min-h-12 sm:p-3 sm:text-sm',
+                    (disabled || option.disabled) &&
+                      'hover:bg-background cursor-not-allowed opacity-50'
+                  )}
+                >
                   <RadioGroupItem
                     value={option.value}
                     id={`${name}-${option.value}`}
                     disabled={option.disabled}
                   />
-                  <Label
-                    htmlFor={`${name}-${option.value}`}
-                    className='text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                  >
-                    {option.label}
-                  </Label>
-                </div>
+                  <span>{option.label}</span>
+                </label>
               ))}
             </RadioGroup>
           </FormControl>

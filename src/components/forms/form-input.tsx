@@ -1,6 +1,7 @@
 'use client';
 
-import { FieldPath, FieldValues } from 'react-hook-form';
+import type { ComponentProps } from 'react';
+import type { FieldPath, FieldValues } from 'react-hook-form';
 import {
   FormControl,
   FormDescription,
@@ -10,7 +11,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { BaseFormFieldProps } from '@/types/base-form';
+import type { BaseFormFieldProps } from '@/types/base-form';
 
 interface FormInputProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -21,6 +22,9 @@ interface FormInputProps<
   step?: string | number;
   min?: string | number;
   max?: string | number;
+  autoComplete?: string;
+  enterKeyHint?: ComponentProps<'input'>['enterKeyHint'];
+  inputMode?: ComponentProps<'input'>['inputMode'];
 }
 
 function FormInput<
@@ -37,6 +41,9 @@ function FormInput<
   step,
   min,
   max,
+  autoComplete,
+  enterKeyHint,
+  inputMode,
   disabled,
   className
 }: FormInputProps<TFieldValues, TName>) {
@@ -59,6 +66,9 @@ function FormInput<
               step={step}
               min={min}
               max={max}
+              autoComplete={autoComplete}
+              enterKeyHint={enterKeyHint}
+              inputMode={inputMode}
               disabled={disabled}
               {...field}
               onChange={(e) => {
