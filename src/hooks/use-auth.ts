@@ -61,6 +61,26 @@ export function useUser() {
 
   useEffect(() => {
     const supabase = createClient();
+    let isMounted = true;
+
+    async function loadInitialUser() {
+      const {
+        data: { user: authUser }
+      } = await supabase.auth.getUser();
+
+      if (!isMounted) {
+        return;
+      }
+
+      setUser(authUser);
+      await fetchMember(authUser);
+
+      if (isMounted) {
+        setIsLoaded(true);
+      }
+    }
+
+    void loadInitialUser();
 
     const {
       data: { subscription }
@@ -71,7 +91,10 @@ export function useUser() {
       setIsLoaded(true);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, [fetchMember]);
 
   return { user, member, avatarUrl, isLoaded };

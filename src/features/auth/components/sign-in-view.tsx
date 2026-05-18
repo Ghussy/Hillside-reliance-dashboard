@@ -108,7 +108,7 @@ export default function SignInViewPage() {
         type: 'email'
       });
       if (verifyError) throw verifyError;
-      router.push('/dashboard/overview');
+      router.push('/dashboard');
     } catch (err: unknown) {
       setError(formatAuthError(err));
     } finally {
@@ -121,7 +121,7 @@ export default function SignInViewPage() {
     setError(null);
 
     const e164 = phoneValue?.trim();
-    if (!e164 || !e164.startsWith('+')) {
+    if (!e164?.startsWith('+')) {
       setError('Enter a valid phone number');
       return;
     }
@@ -160,7 +160,7 @@ export default function SignInViewPage() {
         type: 'sms'
       });
       if (verifyError) throw verifyError;
-      router.push('/dashboard/overview');
+      router.push('/dashboard');
     } catch (err: unknown) {
       setError(formatAuthError(err));
     } finally {

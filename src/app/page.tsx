@@ -9,7 +9,7 @@ export default async function Page() {
 
   if (!user) {
     return redirect('/auth/sign-in');
-  } else {
-    redirect('/dashboard/overview');
   }
+
+  redirect('/dashboard');
 }

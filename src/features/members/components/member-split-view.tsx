@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Activity } from 'lucide-react';
+import { Activity, ArrowLeft } from 'lucide-react';
 import AnimatedTabs from '@/components/smoothui/animated-tabs';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { MemberAvatar } from '@/features/members/components/member-avatar';
@@ -31,9 +32,7 @@ type MemberSplitViewProps = {
 };
 
 export function MemberSplitView({ members }: MemberSplitViewProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(
-    members[0]?.id ?? null
-  );
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterKey>('all');
 
@@ -73,7 +72,12 @@ export function MemberSplitView({ members }: MemberSplitViewProps) {
   return (
     <div className='flex min-h-0 flex-1 gap-2 p-2'>
       {/* ── Left: member list ── */}
-      <div className='flex w-72 shrink-0 flex-col rounded-xl border'>
+      <div
+        className={cn(
+          'flex min-w-0 flex-1 flex-col rounded-xl border lg:w-80 lg:flex-none',
+          selected && 'hidden lg:flex'
+        )}
+      >
         <div className='flex flex-col gap-3 p-3'>
           <div className='flex items-baseline justify-between'>
             <span className='text-foreground text-sm font-medium'>Members</span>
@@ -86,7 +90,6 @@ export function MemberSplitView({ members }: MemberSplitViewProps) {
             placeholder='Search members...'
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className='h-8'
           />
           <AnimatedTabs
             variant='segment'
@@ -116,7 +119,7 @@ export function MemberSplitView({ members }: MemberSplitViewProps) {
                 type='button'
                 onClick={() => setSelectedId(m.id)}
                 className={cn(
-                  'flex w-full items-center gap-3 border-b px-3 py-2.5 text-left transition-colors',
+                  'flex min-h-16 w-full items-center gap-3 border-b px-3 py-3 text-left transition-colors',
                   'hover:bg-accent',
                   selectedId === m.id && 'bg-accent'
                 )}
@@ -143,12 +146,28 @@ export function MemberSplitView({ members }: MemberSplitViewProps) {
       </div>
 
       {/* ── Center: member detail ── */}
-      <div className='flex flex-1 overflow-hidden rounded-xl border'>
+      <div
+        className={cn(
+          'min-w-0 flex-1 overflow-hidden rounded-xl border',
+          selected ? 'flex' : 'hidden lg:flex'
+        )}
+      >
         {selected ? (
           <div
             className='flex-1 overflow-y-auto'
             style={{ scrollbarWidth: 'none' }}
           >
+            <div className='bg-background/95 sticky top-0 z-10 border-b p-2 backdrop-blur lg:hidden'>
+              <Button
+                type='button'
+                variant='ghost'
+                size='sm'
+                onClick={() => setSelectedId(null)}
+              >
+                <ArrowLeft className='size-4' />
+                Members
+              </Button>
+            </div>
             <MemberDetailClient
               key={selected.id}
               member={
@@ -168,7 +187,7 @@ export function MemberSplitView({ members }: MemberSplitViewProps) {
       </div>
 
       {/* ── Right: recent activity ── */}
-      <div className='flex flex-1 flex-col rounded-xl border'>
+      <div className='hidden flex-1 flex-col rounded-xl border 2xl:flex'>
         <div className='flex items-center gap-2 p-3'>
           <Activity className='text-muted-foreground size-4' />
           <span className='text-sm font-medium'>Recent Activity</span>

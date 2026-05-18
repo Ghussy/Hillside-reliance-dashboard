@@ -5,7 +5,7 @@ import { useUser } from '@/hooks/use-auth';
 import type { NavItem } from '@/types';
 
 export function useFilteredNavItems(items: NavItem[]) {
-  const { user, member } = useUser();
+  const { user, member, isLoaded } = useUser();
 
   const filteredItems = useMemo(() => {
     const canAccess = (item: NavItem): boolean => {
@@ -22,6 +22,13 @@ export function useFilteredNavItems(items: NavItem[]) {
       }
 
       if (item.access.role) {
+        // Server routes still enforce role access. Keep role-gated links visible
+        // while the client-side member profile is loading or unavailable so the
+        // sidebar does not hide primary tools after refresh.
+        if (!isLoaded || !member) {
+          return true;
+        }
+
         if (item.access.role === 'committee') {
           return member?.role === 'committee' || member?.role === 'admin';
         }
@@ -50,7 +57,7 @@ export function useFilteredNavItems(items: NavItem[]) {
 
         return item;
       });
-  }, [items, member?.role, user]);
+  }, [items, isLoaded, member, user]);
 
   return filteredItems;
 }

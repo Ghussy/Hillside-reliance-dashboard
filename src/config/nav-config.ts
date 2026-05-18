@@ -1,4 +1,4 @@
-import { NavItem } from '@/types';
+import type { NavItem } from '@/types';
 
 /**
  * Navigation configuration with RBAC support
@@ -34,30 +34,13 @@ import { NavItem } from '@/types';
  */
 export const navItems: NavItem[] = [
   {
-    title: 'Dashboard',
-    url: '/dashboard/overview',
-    icon: 'dashboard',
-    isActive: false,
-    shortcut: ['d', 'd'],
-    items: []
-  },
-  {
-    title: 'Workspaces',
-    url: '/dashboard/workspaces',
-    icon: 'workspace',
-    isActive: false,
-    items: []
-  },
-  {
-    title: 'Teams',
-    url: '/dashboard/workspaces/team',
-    icon: 'teams',
+    title: 'Cases',
+    url: '/dashboard/cases',
+    icon: 'post',
+    shortcut: ['c', 's'],
     isActive: false,
     items: [],
-    // Require organization to be active
-    access: { requireOrg: true }
-    // Alternative: require specific permission
-    // access: { requireOrg: true, permission: 'org:teams:view' }
+    access: { role: 'committee' }
   },
   {
     title: 'Members',
@@ -68,50 +51,12 @@ export const navItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Cases',
-    url: '/dashboard/cases',
-    icon: 'post',
-    shortcut: ['c', 's'],
+    title: 'Settings',
+    url: '/dashboard/settings',
+    icon: 'settings',
+    shortcut: ['s', 's'],
     isActive: false,
     items: [],
     access: { role: 'committee' }
-  },
-  {
-    title: 'Kanban',
-    url: '/dashboard/kanban',
-    icon: 'kanban',
-    shortcut: ['k', 'k'],
-    isActive: false,
-    items: []
-  },
-  {
-    title: 'Account',
-    url: '#', // Placeholder as there is no direct link for the parent
-    icon: 'account',
-    isActive: true,
-    items: [
-      {
-        title: 'Profile',
-        url: '/dashboard/profile',
-        icon: 'profile',
-        shortcut: ['m', 'm']
-      },
-      {
-        title: 'Billing',
-        url: '/dashboard/billing',
-        icon: 'billing',
-        shortcut: ['b', 'b'],
-        // Only show billing if in organization context
-        access: { requireOrg: true }
-        // Alternative: require billing management permission
-        // access: { requireOrg: true, permission: 'org:manage:billing' }
-      },
-      {
-        title: 'Login',
-        shortcut: ['l', 'l'],
-        url: '/',
-        icon: 'login'
-      }
-    ]
   }
 ];

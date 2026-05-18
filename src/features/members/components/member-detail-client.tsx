@@ -133,12 +133,15 @@ export function MemberDetailClient({
 
   return (
     <div
-      className={cn('flex flex-col overflow-hidden px-6 pt-10 pb-8', className)}
+      className={cn(
+        'flex flex-col overflow-hidden px-4 pt-6 pb-8 sm:px-6 sm:pt-10',
+        className
+      )}
     >
       {/* ── Avatar + identity ── */}
       <div className='flex flex-col items-center text-center'>
-        <div className='relative mb-8 flex items-center justify-center'>
-          <div className='absolute -inset-16 overflow-hidden rounded-full'>
+        <div className='relative mb-6 flex items-center justify-center sm:mb-8'>
+          <div className='absolute -inset-10 overflow-hidden rounded-full sm:-inset-16'>
             <DottedGlowBackground
               className='pointer-events-none mask-radial-to-90% mask-radial-at-center'
               opacity={1}
@@ -154,7 +157,10 @@ export function MemberDetailClient({
               speedScale={1}
             />
           </div>
-          <MemberAvatar className='relative size-36 text-3xl' member={member} />
+          <MemberAvatar
+            className='relative size-28 text-2xl sm:size-36 sm:text-3xl'
+            member={member}
+          />
         </div>
 
         <h1 className='text-xl font-semibold tracking-tight'>{member.name}</h1>
@@ -170,7 +176,7 @@ export function MemberDetailClient({
           <Button
             variant='outline'
             size='sm'
-            className='w-full'
+            className='h-11 w-full sm:h-10'
             onClick={handleEdit}
           >
             <SquarePenIcon size={14} className='text-muted-foreground' />
@@ -181,7 +187,7 @@ export function MemberDetailClient({
             <Button
               variant='ghost'
               size='sm'
-              className='flex-1'
+              className='h-11 flex-1 sm:h-10'
               onClick={handleCancel}
               disabled={saving}
             >
@@ -190,7 +196,7 @@ export function MemberDetailClient({
             </Button>
             <Button
               size='sm'
-              className='flex-1'
+              className='h-11 flex-1 sm:h-10'
               onClick={handleSave}
               disabled={saving}
             >
@@ -208,7 +214,7 @@ export function MemberDetailClient({
         {/* Email */}
         {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative hover animation */}
         <div
-          className='-mx-1 flex items-center gap-3 rounded-md px-1 py-0.5'
+          className='flex min-h-12 items-center gap-3 rounded-lg px-2 py-2'
           onMouseEnter={() => emailIconRef.current?.startAnimation()}
           onMouseLeave={() => emailIconRef.current?.stopAnimation()}
         >
@@ -230,7 +236,7 @@ export function MemberDetailClient({
           ) : member.email ? (
             <a
               href={`mailto:${member.email}`}
-              className='truncate text-sm underline-offset-4 hover:underline'
+              className='min-w-0 truncate text-base underline-offset-4 hover:underline sm:text-sm'
             >
               {member.email}
             </a>
@@ -240,7 +246,7 @@ export function MemberDetailClient({
         </div>
 
         {/* Phone */}
-        <div className='-mx-1 flex items-center gap-3 rounded-md px-1 py-0.5'>
+        <div className='flex min-h-12 items-center gap-3 rounded-lg px-2 py-2'>
           <Phone className='text-muted-foreground size-4 shrink-0' />
           {editing ? (
             <Input
@@ -255,7 +261,7 @@ export function MemberDetailClient({
           ) : member.phone ? (
             <a
               href={`sms:${phoneDigits}`}
-              className='text-sm underline-offset-4 hover:underline'
+              className='text-base underline-offset-4 hover:underline sm:text-sm'
             >
               {member.phone}
             </a>
@@ -267,7 +273,7 @@ export function MemberDetailClient({
         {/* Address */}
         {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative hover animation */}
         <div
-          className='-mx-1 flex items-center gap-3 rounded-md px-1 py-0.5'
+          className='flex min-h-12 items-center gap-3 rounded-lg px-2 py-2'
           onMouseEnter={() => mapPinIconRef.current?.startAnimation()}
           onMouseLeave={() => mapPinIconRef.current?.stopAnimation()}
         >
@@ -290,7 +296,7 @@ export function MemberDetailClient({
               href={googleMapsUrl ?? '#'}
               target='_blank'
               rel='noopener noreferrer'
-              className='truncate text-sm underline-offset-4 hover:underline'
+              className='min-w-0 truncate text-base underline-offset-4 hover:underline sm:text-sm'
             >
               {member.address}
             </a>
@@ -302,7 +308,7 @@ export function MemberDetailClient({
         {/* Role */}
         {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative hover animation */}
         <div
-          className='-mx-1 flex items-center gap-3 rounded-md px-1 py-0.5'
+          className='flex min-h-12 items-center gap-3 rounded-lg px-2 py-2'
           onMouseEnter={() => shieldIconRef.current?.startAnimation()}
           onMouseLeave={() => shieldIconRef.current?.stopAnimation()}
         >
@@ -330,7 +336,9 @@ export function MemberDetailClient({
               </SelectContent>
             </Select>
           ) : (
-            <span className='text-sm capitalize'>{member.role}</span>
+            <span className='text-base capitalize sm:text-sm'>
+              {member.role}
+            </span>
           )}
         </div>
       </div>
@@ -343,10 +351,10 @@ export function MemberDetailClient({
           Callings
         </span>
         {callings.length > 0 ? (
-          callings.map((c, i) => (
+          callings.map((c) => (
             <div
-              key={`${c.name}-${c.organization}-${i}`}
-              className='flex items-center gap-3'
+              key={`${c.name}-${c.organization}`}
+              className='flex min-h-12 items-center gap-3 rounded-lg px-2 py-2'
             >
               <div className='bg-muted flex size-8 shrink-0 items-center justify-center rounded-md'>
                 <BookTextIcon size={14} className='text-muted-foreground' />

@@ -9,7 +9,17 @@ export default async function Dashboard() {
 
   if (!user) {
     return redirect('/auth/sign-in');
-  } else {
-    redirect('/dashboard/overview');
   }
+
+  const { data: member } = await supabase
+    .from('members')
+    .select('role')
+    .eq('auth_id', user.id)
+    .single();
+
+  if (member?.role === 'committee' || member?.role === 'admin') {
+    redirect('/dashboard/cases');
+  }
+
+  redirect('/dashboard/members');
 }

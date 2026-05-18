@@ -27,7 +27,7 @@ export async function requireCommitteeMember(): Promise<Member> {
     .single();
 
   if (!canManageCases((member as Member | null) ?? null)) {
-    redirect('/dashboard/overview');
+    redirect('/dashboard/members');
   }
 
   return member as Member;
