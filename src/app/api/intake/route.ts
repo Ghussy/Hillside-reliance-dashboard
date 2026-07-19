@@ -47,6 +47,8 @@ type CaseInsertRow = {
   next_step: string;
 };
 
+const SUPABASE_MIRROR_TIMEOUT_MS = 3000;
+
 function cleanText(value: string): string | null {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
@@ -176,6 +178,23 @@ async function persistToSupabase(values: IntakeSubmission): Promise<boolean> {
   }
 }
 
+async function persistToSupabaseBestEffort(
+  values: IntakeSubmission
+): Promise<boolean> {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<boolean>((resolve) => {
+    timeoutId = setTimeout(() => resolve(false), SUPABASE_MIRROR_TIMEOUT_MS);
+  });
+
+  try {
+    return await Promise.race([persistToSupabase(values), timeout]);
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  }
+}
+
 export async function POST(request: Request) {
   let payload: unknown;
 
@@ -211,7 +230,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const savedToSupabase = await persistToSupabase(parsed.data);
+  const savedToSupabase = await persistToSupabaseBestEffort(parsed.data);
 
   if (!savedToSupabase && !hasGoogleSheetsEnv) {
     return NextResponse.json(
