@@ -1,4 +1,6 @@
 import { intakeSchema, type IntakeSubmission } from '@/features/intake/schema';
+import { appendIntakeToGoogleSheet } from '@/features/intake/google-sheets';
+import { hasGoogleSheetsEnv } from '@/lib/env';
 import { createAdminClient } from '@/supabase/admin';
 import { NextResponse } from 'next/server';
 import * as z from 'zod';
@@ -151,6 +153,29 @@ function toIntakeSubmissionRow(values: IntakeSubmission): IntakeSubmissionRow {
   };
 }
 
+async function persistToSupabase(values: IntakeSubmission): Promise<boolean> {
+  try {
+    const supabase = createAdminClient();
+    const { data, error } = await supabase
+      .from('intake_submissions')
+      .insert(toIntakeSubmissionRow(values))
+      .select('id')
+      .single();
+
+    if (error || !data) {
+      return false;
+    }
+
+    const { error: caseError } = await supabase
+      .from('cases')
+      .insert(toInitialCaseRow(data.id as string, values));
+
+    return !caseError;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   let payload: unknown;
 
@@ -175,37 +200,28 @@ export async function POST(request: Request) {
     );
   }
 
-  try {
-    const supabase = createAdminClient();
-    const { data, error } = await supabase
-      .from('intake_submissions')
-      .insert(toIntakeSubmissionRow(parsed.data))
-      .select('id')
-      .single();
-
-    if (error || !data) {
+  if (hasGoogleSheetsEnv) {
+    try {
+      await appendIntakeToGoogleSheet(parsed.data);
+    } catch {
       return NextResponse.json(
         { error: 'Unable to submit the request right now.' },
         { status: 500 }
       );
     }
+  }
 
-    const { error: caseError } = await supabase
-      .from('cases')
-      .insert(toInitialCaseRow(data.id as string, parsed.data));
+  const savedToSupabase = await persistToSupabase(parsed.data);
 
-    if (caseError) {
-      return NextResponse.json(
-        { error: 'Unable to submit the request right now.' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ ok: true }, { status: 201 });
-  } catch {
+  if (!savedToSupabase && !hasGoogleSheetsEnv) {
     return NextResponse.json(
       { error: 'Unable to submit the request right now.' },
       { status: 500 }
     );
   }
+
+  return NextResponse.json(
+    { ok: true, savedToSheet: hasGoogleSheetsEnv, savedToSupabase },
+    { status: 201 }
+  );
 }

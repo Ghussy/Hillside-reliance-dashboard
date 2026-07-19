@@ -14,9 +14,18 @@ export const AI_ENV = {
   model: 'AI_MODEL'
 } as const;
 
+export const GOOGLE_SHEETS_ENV = {
+  webhookUrl: 'GOOGLE_SHEETS_INTAKE_WEBHOOK_URL',
+  webhookSecret: 'GOOGLE_SHEETS_INTAKE_WEBHOOK_SECRET'
+} as const;
+
 export const hasSupabaseEnv: boolean =
   Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
   Boolean(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+
+export const hasGoogleSheetsEnv: boolean =
+  Boolean(process.env.GOOGLE_SHEETS_INTAKE_WEBHOOK_URL) &&
+  Boolean(process.env.GOOGLE_SHEETS_INTAKE_WEBHOOK_SECRET);
 
 export function getSupabaseEnv(): { url: string; key: string } {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -42,6 +51,22 @@ export function getSupabaseAdminEnv(): { url: string; serviceRoleKey: string } {
   }
 
   return { url, serviceRoleKey };
+}
+
+export function getGoogleSheetsEnv(): {
+  webhookUrl: string;
+  webhookSecret: string;
+} {
+  const webhookUrl = process.env.GOOGLE_SHEETS_INTAKE_WEBHOOK_URL;
+  const webhookSecret = process.env.GOOGLE_SHEETS_INTAKE_WEBHOOK_SECRET;
+
+  if (!webhookUrl || !webhookSecret) {
+    throw new Error(
+      `Google Sheets env missing. Set ${GOOGLE_SHEETS_ENV.webhookUrl} and ${GOOGLE_SHEETS_ENV.webhookSecret} in .env or .env.local.`
+    );
+  }
+
+  return { webhookUrl, webhookSecret };
 }
 
 export function getAiEnv(): { apiKey: string; model: string } {
