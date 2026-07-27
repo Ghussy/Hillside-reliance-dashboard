@@ -140,12 +140,7 @@ export const intakeSchema = z
     followUpContactName: optionalText.default(''),
     followUpAvailability: optionalText.default(''),
     sharePermission: z.boolean().default(true),
-    privacyAcknowledgement: z
-      .boolean()
-      .refine(
-        (value) => value,
-        'Please acknowledge how this information will be used.'
-      )
+    privacyAcknowledgement: z.boolean().default(true)
   })
   .superRefine((values, ctx) => {
     if (values.assistanceTypes.includes('other') && !values.assistanceOther) {
@@ -222,6 +217,5 @@ export const intakeDefaultValues: IntakeFormValues = {
   followUpPlans: '',
   followUpContactName: '',
   followUpAvailability: '',
-  sharePermission: true,
-  privacyAcknowledgement: false
+  sharePermission: true
 };

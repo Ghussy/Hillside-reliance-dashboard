@@ -13,16 +13,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Form } from '@/components/ui/form';
 import {
   assistanceTypeOptions,
   contactMethodOptions,
@@ -321,32 +312,6 @@ function IntakeForm() {
             placeholder='Optional: evenings, Sunday, Instagram handle, etc.'
             enterKeyHint='next'
           />
-
-          <FormField
-            control={form.control}
-            name='privacyAcknowledgement'
-            render={({ field }) => (
-              <FormItem className='flex min-h-14 flex-row items-start gap-3 rounded-xl border p-4'>
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className='flex flex-col gap-1 leading-none'>
-                  <FormLabel>
-                    I understand this will be shared with appropriate committee
-                    members or leaders so someone can follow up.
-                  </FormLabel>
-                  <FormDescription>
-                    If this is an emergency, please contact emergency services
-                    or a bishopric member directly.
-                  </FormDescription>
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
         </CardContent>
       </Card>
 
@@ -355,13 +320,13 @@ function IntakeForm() {
           We only ask for details that help someone follow up.
         </p>
         <Button type='submit' disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Ask For Help'}
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
       </div>
 
       <div className='bg-background/95 fixed inset-x-0 bottom-0 z-40 border-t p-3 shadow-lg backdrop-blur sm:hidden'>
         <Button type='submit' disabled={isSubmitting} className='h-11 w-full'>
-          {isSubmitting ? 'Submitting...' : 'Ask For Help'}
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
       </div>
     </Form>
